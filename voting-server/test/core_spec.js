@@ -1,4 +1,4 @@
-import {List, Map} from 'immutable'
+import {List, Map, fromJS} from 'immutable'
 import {expect} from 'chai'
 
 import {setEntries, next, vote} from '../src/core'
@@ -10,75 +10,85 @@ describe('application logic', () => {
       const state = Map()
       const entries = List.of('Trainspotting', '28 Days Later')
       const nextState = setEntries(state, entries);
-      expect(nextState).to.equal(Map({
-        entries: List.of('Trainspotting', '28 Days Later')
+      expect(nextState).to.equal(fromJS({
+        entries: ['Trainspotting', '28 Days Later']
       }))
     })
     it('converts to immutable', () => {
       const state = Map()
       const entries = ['Trainspotting', '28 Days Later']
       const nextState = setEntries(state, entries)
-      expect(nextState).to.equal(Map({
-        entries: List.of('Trainspotting', '28 Days Later')
+      expect(nextState).to.equal(fromJS({
+        entries: ['Trainspotting', '28 Days Later']
       }))
     })
   })
 
   describe('next', () => {
     it('takes the next two entries under vote', () => {
-      const state = Map({
-        entries: List.of('Trainspotting', '28 Days Later', 'Sunshine')
+      const state = fromJS({
+        entries: ['Trainspotting', '28 Days Later', 'Sunshine']
       })
       const nextState = next(state)
-      expect(nextState).to.equal(Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later')
-        }),
-        entries: List.of('Sunshine')
+      expect(nextState).to.equal(fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later']
+        },
+        entries: ['Sunshine']
       }))
     })
   })
 
   describe('vote', () => {
     it('creates a tally for the voted entry', () => {
-      const state = Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later')
-        }),
-        entries: List()
+      const state = fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later']
+        },
+        entries: []
       })
       const nextState = vote(state, 'Trainspotting')
-      expect(nextState).to.equal(Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
+      expect(nextState).to.equal(fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
             'Trainspotting': 1
-          })
-        }),
-        entries: List()
+          }
+        },
+        entries: []
       }))
     })
     it('adds to existing tally for the voted entry', () => {
-      const state = Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
+      const state = fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
             'Trainspotting': 3,
             '28 Days Later': 2
-          })
-        }),
-        entries: List()
+          }
+        },
+        entries: []
       })
       const nextState = vote(state, 'Trainspotting')
-      expect(nextState).to.equal(Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
+      // expect(nextState).to.equal(Map({
+      //   vote: Map({
+      //     pair: List.of('Trainspotting', '28 Days Later'),
+      //     tally: Map({
+      //       'Trainspotting': 4,
+      //       '28 Days Later': 2
+      //     })
+      //   }),
+      //   entries: List()
+      // }))
+      expect(nextState).to.equal(fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
             'Trainspotting': 4,
             '28 Days Later': 2
-          })
-        }),
-        entries: List()
+          }
+        },
+        entries: []
       }))
     })
   })
