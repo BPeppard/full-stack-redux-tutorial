@@ -4,6 +4,14 @@ import {expect} from 'chai'
 import reducer from '../src/reducer'
 
 describe('reducer', () => {
+  it('has an initialState', () => {
+    const action = {type: 'SET_ENTRIES', entries: ['Trainspotting']}
+    const nextState = reducer(undefined, action)
+    expect(nextState).to.equal(fromJS({
+      entries: ['Trainspotting']
+    }))
+  })
+
   it('handles SET_ENTRIES', () => {
     const initialState = Map();
     const action = {type: 'SET_ENTRIES', entries: ['Trainspotting']}
