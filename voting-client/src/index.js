@@ -1,20 +1,40 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Router, {Route} from 'react-router'
+import {createStore, applyMiddleware} from 'redux'
+import {Provider} from 'react-redux'
+import io from 'socket.io-client'
+import reducer from './reducer'
+import {setState} from './action_creators'
+import remoteActionMiddleware from './remote_action_middleware'
 import App from './components/App'
-import Voting from './components/Voting'
-import Results from './components/Results'
-// import createBrowserHistory from 'history/lib/createBrowserHistory'
+import {VotingContainer} from './components/Voting'
+import {ResultsContainer} from './components/Results'
 
-// let history = createBrowserHistory()
+//const socket = io('${location.protocol}//${location.hostname}:8090')
+const socket = io.connect('http://localhost:8090')
+
+socket.on('state', state => {
+  console.log('***** Got State *****')
+  store.dispatch(setState(state))
+})
+
+const createStoreWithMiddleware = applyMiddleware(
+  remoteActionMiddleware(socket)
+)(createStore)
+const store = createStoreWithMiddleware(reducer)
+
+
 
 const routes =
   <Route component={App}>
-    <Route path='/' component={Voting} />
-    <Route path='/results' component={Results} />
+    <Route path='/' component={VotingContainer} />
+    <Route path='/results' component={ResultsContainer} />
   </Route>
 
 ReactDOM.render(
-  <Router /*history={history}*/>{routes}</Router>,
+  <Provider store={store}>
+    <Router>{routes}</Router>
+  </Provider>,
   document.getElementById('app')
 )

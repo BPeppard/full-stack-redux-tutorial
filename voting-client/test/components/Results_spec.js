@@ -1,10 +1,11 @@
 import React from 'react'
+import TestUtils from 'react-addons-test-utils'
 import ReactDOM from 'react-dom'
 import {List, Map} from 'immutable'
-import Results from '../../src/components/Results'
+import {Results} from '../../src/components/Results'
 import {expect} from 'chai'
 
-const {renderIntoDocument, scryRenderedDOMComponentsWithClass, Simulate} = React.addons.TestUtils
+const {renderIntoDocument, scryRenderedDOMComponentsWithClass, Simulate} = TestUtils
 
 describe('Results', () => {
   it('renders entries with vote counts or zero', () => {
