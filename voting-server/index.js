@@ -4,6 +4,7 @@ import startServer from './src/server'
 export const store = makeStore()
 startServer(store)
 
+/* Bootstraps list of entries */
 store.dispatch({
   type: 'SET_ENTRIES',
   entries: require('./entries.json')

@@ -129,23 +129,20 @@ describe('application logic', () => {
       }))
     })
 
-    it('just testing fromJS', () => {
-      var state = Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
-            'Trainspotting': 4,
-            '28 Days Later': 2
-          })
-        })
+    it('does not allow entries to be voted on if they are not in the current pair', () => {
+      const state = fromJS({
+        pair: ['Trainspotting', '28 Days Later'],
+        tally: {
+          'Trainspotting': 3,
+          '28 Days Later': 2
+        }
       })
-      expect(state).to.equal(fromJS({
-        vote: {
-          pair: ['Trainspotting', '28 Days Later'],
-          tally: {
-            'Trainspotting': 4,
-            '28 Days Later': 2
-          }
+      const nextState = vote(state, 'Sunshine')
+      expect(nextState).to.equal(fromJS({
+        pair: ['Trainspotting', '28 Days Later'],
+        tally: {
+          'Trainspotting': 3,
+          '28 Days Later': 2
         }
       }))
     })
