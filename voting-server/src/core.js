@@ -40,5 +40,5 @@ export function vote(voteState, entry) {
       tally => tally + 1
     )
   }
-  return voteState
+  return voteState 
 }
